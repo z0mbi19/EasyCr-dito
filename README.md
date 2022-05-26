@@ -46,13 +46,7 @@
 
 ## :dart: About ##
 
-Describe your project
-
-## :sparkles: Features ##
-
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
+This project is a map of covid in the world
 
 ## :rocket: Technologies ##
 
@@ -69,7 +63,7 @@ Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) an
 
 ```bash
 # Clone this project
-$ git clone https://github.com/z0mbi19/EasyCr-dito
+$ git clone https://github.com/z0mbi19/easycredito
 
 # Access
 $ cd easycredito
@@ -80,10 +74,11 @@ $ yarn
 # Run the project
 $ yarn start
 
-#Run test
-$ yarn test
 
 # The server will initialize in the <http://localhost:3000>
+
+#Run test
+$ yarn test
 ```
 
 ## :memo: License ##
