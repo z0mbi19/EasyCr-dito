@@ -118,7 +118,6 @@ function App() {
 
   const handleChange = (value) => {
     setDate(allDate[value])
-    console.log(allDate[value])
   };
 
   const optimizedFn = useCallback(debounce(handleChange), []);
