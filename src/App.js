@@ -43,8 +43,6 @@ function App() {
 
       const groupByVariant = groupBy(data, "variant")
 
-      console.log(groupByVariant)
-
       setVariant(Object.keys(groupByVariant))
 
       const geo = [["Country", "Total"]]
@@ -61,8 +59,6 @@ function App() {
         .eq("date", date)
 
       const groupByVariant = groupBy(data, "variant")
-
-      console.log(groupByVariant)
 
       setVariant(Object.keys(groupByVariant))
 
