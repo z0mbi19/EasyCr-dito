@@ -79,7 +79,7 @@ function App() {
 
     const groupByDate = groupBy(data, "date")
 
-    setAllDate(Object.keys(groupByDate))
+    setAllDate(Object.keys(groupByDate).sort())
   }
 
   function valuetext() {
@@ -102,6 +102,7 @@ function App() {
       }, 1000)
     }
   }, [play])
+
 
   return (
     <div className="App">
