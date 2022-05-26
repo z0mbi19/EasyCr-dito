@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Chart from 'react-google-charts';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from './supabaseClient';
 import { Button, Checkbox, FormControlLabel, InputLabel, MenuItem, Select, Slider } from '@mui/material';
 
@@ -13,6 +13,8 @@ function App() {
   const [allDate, setAllDate] = useState()
   const [accumulated, setAccumulated] = useState(false)
   const [play, setPlay] = useState(false)
+  const [sliderTitle, setSliderTitle] = useState("2021-12-27")
+
 
   useEffect(() => {
     getCovid()
@@ -37,16 +39,18 @@ function App() {
       let { data } = await supabase
         .from('covid')
         .select()
-        .lt("date", date)
+        .eq("date", date)
 
       const groupByVariant = groupBy(data, "variant")
+
+      console.log(groupByVariant)
 
       setVariant(Object.keys(groupByVariant))
 
       const geo = [["Country", "Total"]]
 
       groupByVariant[select].forEach(element => {
-        geo.push([element.location, element.num_sequences])
+        geo.push([element.location, element.num_sequences_total])
       });
 
       setCovid(geo)
@@ -57,6 +61,8 @@ function App() {
         .eq("date", date)
 
       const groupByVariant = groupBy(data, "variant")
+
+      console.log(groupByVariant)
 
       setVariant(Object.keys(groupByVariant))
 
@@ -71,6 +77,7 @@ function App() {
   }
 
 
+
   const getDate = async () => {
     let { data } = await supabase
       .from('covid')
@@ -82,9 +89,7 @@ function App() {
     setAllDate(Object.keys(groupByDate).sort())
   }
 
-  function valuetext() {
-    return `${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}`;
-  }
+
 
   useEffect(() => {
     if (play === true) {
@@ -103,6 +108,33 @@ function App() {
     }
   }, [play])
 
+  const debounce = (func) => {
+    let timer;
+    return function (...args) {
+      const context = this;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
+        func.apply(context, args);
+      }, 1500);
+    };
+  };
+
+  const handleChange = (value) => {
+    setDate(allDate[value])
+    console.log(allDate[value])
+  };
+
+  const optimizedFn = useCallback(debounce(handleChange), []);
+
+  function valuetext() {
+    return sliderTitle;
+  }
+
+  const handleSlider = (e) => {
+    setSliderTitle(allDate[e])
+    optimizedFn(e)
+  }
 
   return (
     <div className="App">
@@ -118,7 +150,7 @@ function App() {
         {variant && variant.map((v, i) => <MenuItem key={i} value={v}>{v}</MenuItem>)}
       </Select>
 
-      <h3>Date: {`${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}`}</h3>
+      <h3>Date: {date}</h3>
       <div style={{ width: "80%", margin: 10 }} >
 
         <Slider
@@ -128,10 +160,10 @@ function App() {
           getAriaValueText={valuetext}
           valueLabelFormat={valuetext}
           step={1}
-          onChange={(e) => setDate(allDate[e.target.value])}
+          onChange={(e) => handleSlider(e.target.value)}
           valueLabelDisplay="auto"
         />
-        <FormControlLabel control={<Checkbox value={accumulated} onChange={(e) => setAccumulated(!accumulated)} />} label="Accumulate to this date" />
+        <FormControlLabel control={<Checkbox value={accumulated} onChange={() => setAccumulated(!accumulated)} />} label="Accumulate to this date" />
 
       </div>
       <Chart
