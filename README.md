@@ -54,7 +54,8 @@ The following tools were used in this project:
 
 - [Node.js](https://nodejs.org/en/)
 - [React](https://pt-br.reactjs.org/)
-
+- [React Google Charts](https://www.react-google-charts.com/)
+- [supabase-js](https://github.com/supabase/supabase-js)
 ## :white_check_mark: Requirements ##
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
