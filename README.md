@@ -3,7 +3,7 @@
 
   &#xa0;
 
-  <!-- <a href="https://easycredito.netlify.app">Demo</a> -->
+   <a href="https://covidmaptest.herokuapp.com/">Demo</a> 
 </div>
 
 <h1 align="center">Easycredito</h1>
