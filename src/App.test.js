@@ -1,8 +1,28 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders Covid Daily Cases', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const title = screen.getByText("Covid Daily Cases");
+  expect(title).toBeInTheDocument();
 });
+
+test('renders Select', () => {
+  render(<App />);
+  const slider = screen.getByRole('slider')
+  expect(slider.value).toBe("20")
+})
+
+test('renders Checkbox', () => {
+  render(<App />);
+  const checkBox = screen.getByRole("checkbox")
+  expect(checkBox).toBeInTheDocument()
+})
+
+test('checkbox change value', () => {
+  render(<App />);
+  const slider = screen.getByRole('checkbox')
+  fireEvent.click(slider)
+  expect(slider.value).toBe("true")
+
+})

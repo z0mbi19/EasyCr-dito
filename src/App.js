@@ -3,7 +3,7 @@ import './App.css';
 import Chart from 'react-google-charts';
 import { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
-import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, Slider } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, InputLabel, MenuItem, Select, Slider } from '@mui/material';
 
 function App() {
   const [covid, setCovid] = useState()
@@ -12,6 +12,7 @@ function App() {
   const [date, setDate] = useState("2021-12-27")
   const [allDate, setAllDate] = useState()
   const [accumulated, setAccumulated] = useState(false)
+  const [play, setPlay] = useState(false)
 
   useEffect(() => {
     getCovid()
@@ -69,6 +70,7 @@ function App() {
     }
   }
 
+
   const getDate = async () => {
     let { data } = await supabase
       .from('covid')
@@ -78,15 +80,33 @@ function App() {
     const groupByDate = groupBy(data, "date")
 
     setAllDate(Object.keys(groupByDate))
-
   }
 
-  console.log(accumulated)
+  function valuetext() {
+    return `${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}`;
+  }
+
+  useEffect(() => {
+    if (play === true) {
+      let counter = 0
+      const i = setInterval(() => {
+        setDate(allDate[counter])
+        counter++
+        if (play === false) {
+          clearInterval(i)
+        }
+        if (counter === allDate.length) {
+          clearInterval(i)
+          setPlay(false)
+        }
+      }, 1000)
+    }
+  }, [play])
 
   return (
     <div className="App">
       <h1>Covid Daily Cases</h1>
-      <InputLabel id="abel">Variant</InputLabel>
+      <InputLabel id="selectCovid">Variant</InputLabel>
       <Select
         labelId="abel"
         id="able"
@@ -94,21 +114,24 @@ function App() {
         label="Variant"
         onChange={(e) => setSelect(e.target.value)}
       >
-        {variant && variant.map((v) => <MenuItem value={v}>{v}</MenuItem>)}
+        {variant && variant.map((v, i) => <MenuItem key={i} value={v}>{v}</MenuItem>)}
       </Select>
 
-      <h3>Date: {date}</h3>
+      <h3>Date: {`${date.substring(5, 7)}/${date.substring(8, 10)}/${date.substring(0, 4)}`}</h3>
       <div style={{ width: "80%", margin: 10 }} >
+
         <Slider
-          aria-label="Custom marks"
+          disabled={play}
           defaultValue={20}
           max={allDate && allDate.length - 1}
+          getAriaValueText={valuetext}
+          valueLabelFormat={valuetext}
           step={1}
           onChange={(e) => setDate(allDate[e.target.value])}
           valueLabelDisplay="auto"
-          aria-labelledby="non-linear-slider"
         />
         <FormControlLabel control={<Checkbox value={accumulated} onChange={(e) => setAccumulated(!accumulated)} />} label="Accumulate to this date" />
+
       </div>
       <Chart
         chartType="GeoChart"
@@ -116,6 +139,7 @@ function App() {
         height="400px"
         data={covid}
       />
+      <Button disabled={play} variant="contained" onClick={() => setPlay(true)} >Play </Button>
     </div>
   );
 }
