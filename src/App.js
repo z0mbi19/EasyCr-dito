@@ -117,7 +117,8 @@ function App() {
   };
 
   const handleChange = (value) => {
-    setDate(allDate[value])
+
+    return setDate(allDate[value])
   };
 
   const optimizedFn = useCallback(debounce(handleChange), []);
